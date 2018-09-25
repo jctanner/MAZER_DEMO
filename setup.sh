@@ -7,6 +7,11 @@ WORKSPACE="$CWD/workspace"
 #   CHECKOUTS
 #################################################
 
+if [[ ! -d $WORKSPACE/github/ansible/mazer ]]; then
+    mkdir -p $WORKSPACE/github/ansible
+    git clone git@github.com:ansible/mazer $WORKSPACE/github/ansible/mazer
+fi
+
 if [[ ! -d $WORKSPACE/github/jctanner/molecule ]]; then
     echo "Making molecule [fork] checkout"
     mkdir -p $WORKSPACE/github/jctanner
@@ -47,5 +52,43 @@ if [[ ! -d venv ]]; then
 fi
 
 source venv/bin/activate
+PIP="$CWD/venv/bin/pip"
 
+which ansible
+RC=$?
+if [[ $? != 0 ]]; then
+    echo "Installing ansible in venv"
+    $PIP install -e $WORKSPACE/github/ansible/ansible
+    RC=$?
+    if [[ $? != 0 ]]; then
+        exit $?
+    fi
+else
+    echo "ansible already installed in venv"
+fi
 
+which mazer
+RC=$?
+if [[ $? != 0 ]]; then
+    echo "Installing mazer in venv"
+    $PIP install -e $WORKSPACE/github/ansible/mazer
+    RC=$?
+    if [[ $? != 0 ]]; then
+        exit $?
+    fi
+else
+    echo "mazer already installed in venv"
+fi
+
+which molecule
+RC=$?
+if [[ $? != 0 ]]; then
+    echo "Installing molecule in venv"
+    $PIP install -e $WORKSPACE/github/jctanner/molecule
+    RC=$?
+    if [[ $? != 0 ]]; then
+        exit $?
+    fi
+else
+    echo "molecule already installed in venv"
+fi
