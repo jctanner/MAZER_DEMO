@@ -26,6 +26,7 @@ molecule init role --role-name=role1
 cd $CWD/collections/bar
 molecule init module \
     --name=foobar \
+    --namespace="foo.bar" \
     --change-command="useradd foobar" \
     --check-command="id foobar" \
     --info-command="id foobar"
